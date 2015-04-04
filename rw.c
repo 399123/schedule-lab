@@ -30,7 +30,7 @@
 #define DEFAULT_BLOCKSIZE 1024
 #define DEFAULT_TRANSFERSIZE 1024*100
 
-int main(int argc, char* argv[]){
+int mainchild(int argc, char* argv[]){
 
     int rv;
     int inputFD;
