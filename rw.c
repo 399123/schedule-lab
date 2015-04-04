@@ -21,6 +21,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 
 /* Local Defines */
 #define MAXFILENAMELENGTH 80
@@ -214,4 +215,29 @@ int main(int argc, char* argv[]){
     }
 
     return EXIT_SUCCESS;
+}
+
+int main(int argc, char *argv[])
+{
+    int pid;
+    int count;
+    int i;
+    if(argc > 4){
+        count = atoi(argv[4]);
+    }
+    else{
+        count = 10000;
+    }
+    for (i = 0; i < count; ++i)
+    {
+        pid = fork();
+        if(pid != 0){
+        	mainchild(argc, argv);
+            break;
+        }
+    }
+    if(pid != 0){
+    while(wait(NULL) != -1);
+    }
+    return 0;
 }

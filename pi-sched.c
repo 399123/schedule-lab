@@ -11,11 +11,14 @@
 
 /* Local Includes */
 #include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include <errno.h>
 #include <sched.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
 #define DEFAULT_ITERATIONS 1000000
 #define RADIUS (RAND_MAX / 2)
@@ -106,25 +109,26 @@ int mainchild(int argc, char* argv[]){
     return 0;
 }
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
     int pid;
+    int count;
+    int i;
     if(argc > 2){
-        int count = argv[2];
+        count = atoi(argv[2]);
     }
     else{
         count = 10000;
     }
-    for (int i = 0; i < count; ++i)
+    for (i = 0; i < count; ++i)
     {
         pid = fork();
         if(pid != 0){
             break;
         }
     }
-    mainchild(argc, argv);
-    while(wait(NULL) != -1){
-
+    if(pid != 0){
+    while(wait(NULL) != -1);
     }
     return 0;
 }
