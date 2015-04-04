@@ -28,7 +28,7 @@ inline double zeroDist(double x, double y){
     return dist(0, 0, x, y);
 }
 
-int main(int argc, char* argv[]){
+int mainchild(int argc, char* argv[]){
 
     long i;
     long iterations;
@@ -103,5 +103,28 @@ int main(int argc, char* argv[]){
     /* Print result */
     fprintf(stdout, "pi = %f\n", piCalc);
 
+    return 0;
+}
+
+int main(int argc, char const *argv[])
+{
+    int pid;
+    if(argc > 2){
+        int count = argv[2];
+    }
+    else{
+        count = 10000;
+    }
+    for (int i = 0; i < count; ++i)
+    {
+        pid = fork();
+        if(pid != 0){
+            break;
+        }
+    }
+    mainchild(argc, argv);
+    while(wait(NULL) != -1){
+
+    }
     return 0;
 }
