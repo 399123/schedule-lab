@@ -32,7 +32,7 @@ inline double zeroDist(double x, double y){
 }
 
 int mainchild(int argc, char* argv[]){
-
+	printf("%s\n", "new child");
     long i;
     long iterations;
     struct sched_param param;
@@ -114,21 +114,22 @@ int main(int argc, char *argv[])
     int pid;
     int count;
     int i;
-    if(argc > 2){
-        count = atoi(argv[2]);
+    if(argc > 3){
+        count = atoi(argv[3]);
     }
     else{
-        count = 10000;
+        count = 10;
     }
     for (i = 0; i < count; ++i)
     {
         pid = fork();
-        if(pid != 0){
+        if(pid == 0){
+        	mainchild(argc, argv);
             break;
         }
     }
     if(pid != 0){
-    while(wait(NULL) != -1);
+    	while(wait(NULL) != -1);
     }
     return 0;
 }

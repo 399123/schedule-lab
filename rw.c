@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
+#include <sched.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
@@ -31,7 +32,7 @@
 #define DEFAULT_TRANSFERSIZE 1024*100
 
 int mainchild(int argc, char* argv[]){
-
+	printf("%s\n", "New Child");
     int rv;
     int inputFD;
     int outputFD;
@@ -222,16 +223,33 @@ int main(int argc, char *argv[])
     int pid;
     int count;
     int i;
-    if(argc > 4){
-        count = atoi(argv[4]);
+    int policy;
+    if(argc > 6){
+        count = atoi(argv[6]);
     }
     else{
-        count = 10000;
+        count = 10;
     }
+     	if(argc > 4){
+		if(!strcmp(argv[5], "SCHED_OTHER")){
+	    	policy = SCHED_OTHER;
+		}
+		else if(!strcmp(argv[5], "SCHED_FIFO")){
+	    	policy = SCHED_FIFO;
+		}
+		else if(!strcmp(argv[5], "SCHED_RR")){
+	    	policy = SCHED_RR;
+		}
+		else{
+	    	fprintf(stderr, "Unhandeled scheduling policy\n");
+	    	exit(EXIT_FAILURE);
+		}
+	}
+	sched_get_priority_max(policy);
     for (i = 0; i < count; ++i)
     {
         pid = fork();
-        if(pid != 0){
+        if(pid == 0){
         	mainchild(argc, argv);
             break;
         }
@@ -239,5 +257,6 @@ int main(int argc, char *argv[])
     if(pid != 0){
     while(wait(NULL) != -1);
     }
+    printf("%s\n", argv[0]);
     return 0;
 }
